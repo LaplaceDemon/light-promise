@@ -1,6 +1,5 @@
 package io.github.laplacedemon;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestPromise {
+public class PromiseBaseOnCompletableFuture {
     private ScheduledExecutorService se;
 
     @Before
@@ -30,7 +29,7 @@ public class TestPromise {
                 
         // 当前线程
         new Promise((resolve, reject) -> {
-        // 当前线程
+            // 当前线程
             se.schedule(() -> {
                 resolve.accept(123);
             }, 1, TimeUnit.SECONDS);

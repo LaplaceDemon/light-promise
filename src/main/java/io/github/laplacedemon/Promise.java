@@ -65,7 +65,6 @@ public class Promise {
         State currentState = self.status.get();
         
         if (currentState.equals(State.Fulfilled)) {
-            
             submitMethod.accept(() -> {
                 // 当前以及完成, 成功
                 newPromise.initExecutor((resolve, reject) -> {
