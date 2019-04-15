@@ -1,6 +1,5 @@
 package io.github.laplacedemon;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,10 +25,10 @@ public class TestPromise {
     public void testFlunt() {
         System.out.println("start task.");
          
-        Promise promise = 
+        Promise2 promise = 
                 
         // 当前线程
-        new Promise((resolve, reject) -> {
+        new Promise2((resolve, reject) -> {
         // 当前线程
             se.schedule(() -> {
                 resolve.accept(123);
@@ -48,14 +47,14 @@ public class TestPromise {
         // 当前线程
         .then((Object value) -> {
          // 异步线程
-            return new Promise((resolve, reject) -> {
+            return new Promise2((resolve, reject) -> {
                 resolve.accept(456);
             });
         }, null)
         
         .then((Object value) -> {
             // 异步线程
-            return new Promise((resolve, reject) -> {
+            return new Promise2((resolve, reject) -> {
                 resolve.accept(789);
             });
         }, null)

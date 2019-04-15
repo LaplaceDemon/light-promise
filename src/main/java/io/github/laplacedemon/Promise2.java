@@ -9,7 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Promise {
+public class Promise2 {
     private AtomicReference<State> status;
     private Object value;
     private Object reason;
@@ -29,7 +29,7 @@ public class Promise {
         executor.accept(this.resolve, this.reject);
     }
 
-    private Promise() {
+    private Promise2() {
         this.status.set(State.Pending);
         this.resolvedCallbackList = new LinkedList<>();
         this.rejectCallbackList = new LinkedList<>();
@@ -53,14 +53,14 @@ public class Promise {
         };
     }
 
-    public Promise(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
+    public Promise2(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
         this();
         initExecutor(executor);
     }
 
-    public Promise then(final Function<Object, Object> onResolved, final Function<Object, Object> onRejected) {
-        Promise self = this;
-        final Promise newPromise = new Promise();
+    public Promise2 then(final Function<Object, Object> onResolved, final Function<Object, Object> onRejected) {
+    	Promise2 self = this;
+        final Promise2 newPromise = new Promise2();
         
         State currentState = self.status.get();
         
@@ -121,14 +121,14 @@ public class Promise {
         return newPromise;
     }
 
-    private final static void resolvePromise(Promise promise, Object result, final Consumer<Object> resolve, final Consumer<Object> reject) {
+    private final static void resolvePromise(Promise2 promise, Object result, final Consumer<Object> resolve, final Consumer<Object> reject) {
         if (promise == result) {
             reject.accept(new IllegalArgumentException("loop ref"));
             return ;
         }
 
-        if (result instanceof Promise) {
-            Promise thenPromise = (Promise) result;
+        if (result instanceof Promise2) {
+        	Promise2 thenPromise = (Promise2) result;
             try {
                 thenPromise.then((y) -> {
                     resolvePromise(promise, y, resolve, reject);

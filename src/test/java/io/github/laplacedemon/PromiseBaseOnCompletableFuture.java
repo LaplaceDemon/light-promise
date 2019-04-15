@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.github.laplacedemon.promise.completablefuture.Promise;
+
 public class PromiseBaseOnCompletableFuture {
     private ScheduledExecutorService se;
 
@@ -40,31 +42,34 @@ public class PromiseBaseOnCompletableFuture {
             // 异步线程
             System.out.println("value1 " + value);
             return null;
-        }, (Object res) -> {
-            return null;
         })
         
         // 当前线程
         .then((Object value) -> {
          // 异步线程
             return new Promise((resolve, reject) -> {
-                resolve.accept(456);
+//                resolve.accept(456);
+            	 // 当前线程
+                se.schedule(() -> {
+                	System.out.println("value2 " + value);
+                    resolve.accept(456);
+                }, 10, TimeUnit.SECONDS);
             });
-        }, null)
+        })
         
         .then((Object value) -> {
             // 异步线程
             return new Promise((resolve, reject) -> {
                 resolve.accept(789);
             });
-        }, null)
+        })
         
         // 当前线程
         .then((Object value) -> {
             // 异步线程
-            System.out.println("value2 " + value);
+            System.out.println("value3 " + value);
             return null;
-        }, null);
+        });
         
     }
 }
