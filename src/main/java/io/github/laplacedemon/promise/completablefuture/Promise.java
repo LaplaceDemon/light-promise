@@ -1,7 +1,5 @@
 package io.github.laplacedemon.promise.completablefuture;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
