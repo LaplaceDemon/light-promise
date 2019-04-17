@@ -1,5 +1,7 @@
 package io.github.laplacedemon.promise.completablefuture;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -35,7 +37,7 @@ public class Promise {
 	public Promise then(final Function<Object, Object> onResolved) {
 		// this.completableFuture.thenAccept(action);
 		CompletableFuture<Object> newFuture = this.future.thenApplyAsync((Object value)->{
-			if(value instanceof Promise) {
+			if (value instanceof Promise) {
 				Promise promiseValue = (Promise)value;
 				Promise thenPromise = promiseValue.then(onResolved);
 //				CompletableFuture<Object> cf = promiseValue.future.thenApplyAsync(onResolved);
@@ -68,5 +70,25 @@ public class Promise {
 		Promise promise = new Promise();
 		promise.future = newFuture;
 		return promise;
+	}
+	
+	public static Promise all(Promise... promises) {
+	    Promise promise = new Promise();
+	    
+	    int psLen = promises.length;
+	    
+	    @SuppressWarnings("unchecked")
+        CompletableFuture<Object>[] cfs = new CompletableFuture[psLen];
+	    
+	    for(int i = 0;i<psLen;i++) {
+	        cfs[i] = promises[i].future;
+	    }
+	    
+        CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(cfs);
+        CompletableFuture<Object> lastFuture = allOfFuture.thenApplyAsync((Void v)->{
+            return null;
+        });
+	    promise.future = lastFuture;
+	    return promise;
 	}
 }

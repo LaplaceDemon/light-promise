@@ -1,9 +1,7 @@
-package io.github.laplacedemon.promise.base;
+package io.github.laplacedemon.promise.aplus;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import io.github.laplacedemon.Promise;
 
 public class PromiseFactory {
     
@@ -15,7 +13,7 @@ public class PromiseFactory {
         this.consumer = consumer;
     }
     
-    public Promise create(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
-        return new Promise(executor);
+    public PromiseAPlus create(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
+        return new PromiseAPlus(executor);
     }
 }

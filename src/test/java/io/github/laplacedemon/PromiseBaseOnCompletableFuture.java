@@ -3,21 +3,28 @@ package io.github.laplacedemon;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.github.laplacedemon.promise.completablefuture.Promise;
 
 public class PromiseBaseOnCompletableFuture {
-    private ScheduledExecutorService se;
-
-    @Before
-    public void begin() throws InterruptedException {
+    private static ScheduledExecutorService se;
+    
+    static {
         se = Executors.newScheduledThreadPool(1);
     }
-
+    
+//    @BeforeClass
+//    public void init() {
+//        
+//    }
+    
     @After
     public void after() throws InterruptedException {
         se.awaitTermination(1, TimeUnit.DAYS);
@@ -72,4 +79,46 @@ public class PromiseBaseOnCompletableFuture {
         });
         
     }
+    
+    
+    @Test
+    public void testPromise() {
+        Function<Object, Object> multiply = (Object value) -> {
+            Integer input = (Integer)value;
+            return new Promise((resolve, reject) -> {
+                log("calculating " + input + " x " + input + "...");
+                setTimeout(resolve, 500, input * input);
+            });
+        };
+        
+        Function<Object, Object> add = (Object value) -> {
+            Integer input = (Integer)value;
+            return new Promise((resolve, reject) -> {
+                log("calculating " + input + " x " + input + "...");
+                setTimeout(resolve, 500, input + input);
+            });
+        };
+        
+        Promise p = new Promise((resolve, reject) -> {
+            System.out.println("start new Promise...");
+            resolve.accept(123);            
+        });
+        
+        p.then(multiply).then(add).then(multiply).then(add).then((Object result)->{
+            log("Got value: " + result);
+            return null; 
+        });
+        
+    }
+    
+    public static void log(String str) {
+        System.out.println(str);
+    }
+    
+    public static void setTimeout(final Consumer<Object> funConsumer, long timeout, final Object param) {
+        se.schedule(() -> {
+            funConsumer.accept(param);
+        }, timeout, TimeUnit.MILLISECONDS);
+    }
+    
 }

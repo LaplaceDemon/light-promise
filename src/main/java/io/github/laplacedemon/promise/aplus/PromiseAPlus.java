@@ -1,4 +1,4 @@
-package io.github.laplacedemon.promise.base;
+package io.github.laplacedemon.promise.aplus;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import io.github.laplacedemon.State;
 
-public class PromiseBase {
+public class PromiseAPlus {
     private State status;
     private Object value;
     private Object reason;
@@ -22,7 +22,7 @@ public class PromiseBase {
         executor.accept(this.resolve, this.reject);
     }
 
-    private PromiseBase() {
+    private PromiseAPlus() {
         this.status = State.Pending;
         this.resolvedCallbackList = new LinkedList<>();
         this.rejectCallbackList = new LinkedList<>();
@@ -48,14 +48,14 @@ public class PromiseBase {
         };
     }
 
-    public PromiseBase(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
+    public PromiseAPlus(BiConsumer<Consumer<Object>, Consumer<Object>> executor) {
         this();
         initExecutor(executor);
     }
 
-    public PromiseBase then(final Function<Object, Object> onResolved, final Function<Object, Object> onRejected) {
-        PromiseBase self = this;
-        final PromiseBase newPromise = new PromiseBase();
+    public PromiseAPlus then(final Function<Object, Object> onResolved, final Function<Object, Object> onRejected) {
+        PromiseAPlus self = this;
+        final PromiseAPlus newPromise = new PromiseAPlus();
 
         if (self.status.equals(State.Fulfilled)) {
             // 当前以及完成, 成功
@@ -108,14 +108,14 @@ public class PromiseBase {
         return newPromise;
     }
 
-    private final static void resolvePromise(PromiseBase promise, Object result, final Consumer<Object> resolve, final Consumer<Object> reject) {
+    private final static void resolvePromise(PromiseAPlus promise, Object result, final Consumer<Object> resolve, final Consumer<Object> reject) {
         if (promise == result) {
             reject.accept(new IllegalArgumentException("loop ref"));
             return ;
         }
 
-        if (result instanceof PromiseBase) {
-            PromiseBase thenPromise = (PromiseBase) result;
+        if (result instanceof PromiseAPlus) {
+            PromiseAPlus thenPromise = (PromiseAPlus) result;
             try {
                 thenPromise.then((y) -> {
                     resolvePromise(promise, y, resolve, reject);
